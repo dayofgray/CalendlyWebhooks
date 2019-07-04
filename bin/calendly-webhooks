@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require './lib/CalendlyWebhooks'
+require_relative '../lib/CalendlyWebhooks'
 
 
 CalendlyWebhooks::CLI.new.call
