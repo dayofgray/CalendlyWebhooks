@@ -1,6 +1,3 @@
-require 'net/http'
-require 'uri'
-
 class Request
 
 attr_accessor :endpoint_url, :token, :webhook_url 

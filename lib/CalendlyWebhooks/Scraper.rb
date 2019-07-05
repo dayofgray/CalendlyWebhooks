@@ -1,0 +1,2 @@
+class CalendlyWebhooks::Scraper
+end
