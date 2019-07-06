@@ -2,6 +2,7 @@ require 'net/http'
 require 'uri'
 require 'pry'
 require 'nokogiri'
+require 'open-uri'
 
 require_relative "./CalendlyWebhooks/version"
 require_relative "./CalendlyWebhooks/CLI"

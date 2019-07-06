@@ -1,11 +1,13 @@
-class Request
+class CalendlyWebhooks::Request
 
-attr_accessor :endpoint_url, :token, :webhook_url 
+attr_accessor :endpoint_url, :token, :webhook_url, :type, :documentation
 
-def initialize(endpoint_url, token, webhook_url)
+def initialize(endpoint_url, token, webhook_url, type, documentation)
     @endpoint_url = endpoint_url
     @token = token
     @webhook_url = webhook_url
+    @type = type
+    @documentation = documentation
 end
 
 def make_request
