@@ -2,12 +2,21 @@ class CalendlyWebhooks::Request
 
 attr_accessor :endpoint_url, :token, :webhook_url, :type, :documentation
 
-def initialize(endpoint_url, token, webhook_url, type, documentation)
-    @endpoint_url = endpoint_url
-    @token = token
-    @webhook_url = webhook_url
+@@all = []
+
+def initialize(type, documentation)
     @type = type
     @documentation = documentation
+    @@all << self
+end
+
+def self.all
+  @@all
+end
+
+def self.create_from_scraper(url)
+  request_info = CalendlyWebhooks::Scraper.new.get_request_info(url)
+  CalendlyWebhooks::Request.new(request_info[0], request_info[1])
 end
 
 def make_request

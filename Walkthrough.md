@@ -23,27 +23,31 @@ Welcome to Calendly's Developer Help Center! What would you like to do today?
 6. See information about me
 
 Choice 1
-    *scrapes endpoint URL*
+    *hard-codes endpoint URL*
     What data would you like to pass in this webhook?
         1. Newly booked events
         2. Canceled events
         3. Both
     What is your API Token?
+    *sets token instance variable*
     What is your destination URL?
+    *sets destination instance variable*
     Webhook created, test it out!
     Would you like to exit or return to main menu?
 
 Choice 2
-    *scrapes endpoint URL*
     What is your API Token?
+    *sets token instance variable*
     What is your hook ID?
         If you do not know your hook ID, try find my webhooks (option 3)
+    *hard-codes endpoint URL with hook ID*
     Webhook deleted!
     Would you like to exit or return to main menu?
 
 Choice 3
-     *scrapes endpoint URL*
+    *hard-codes endpoint URL*
     What is your API Token?
+    *sets token instance variable*
     Displays Webhook information, including IDs
     Would you like to exit or return to main menu?
 
@@ -52,15 +56,15 @@ Choice 4
     Would you like to exit or return to main menu?
 
 Choice 5
-     *scrapes endpoint URL*
+    *hard-codes endpoint URL*
     What is your API Token?
+    *sets token instance variable*
     Displays event types
     Would you like to exit or return to main menu?
 
 Choice 6
-     *scrapes endpoint URL*
+    *hard-codes endpoint URL*
     What is your API Token?
+    *sets token instance variable*
     Displays user information
     Would you like to exit or return to main menu?
-
-
