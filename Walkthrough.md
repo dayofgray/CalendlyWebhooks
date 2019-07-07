@@ -33,7 +33,7 @@ Choice 1
     What is your destination URL?
     *sets destination instance variable*
     Webhook created, test it out!
-    Would you like to exit or return to main menu?
+    Would you like to end the program or return to main menu?
 
 Choice 2
     What is your API Token?
@@ -42,29 +42,29 @@ Choice 2
         If you do not know your hook ID, try find my webhooks (option 3)
     *hard-codes endpoint URL with hook ID*
     Webhook deleted!
-    Would you like to exit or return to main menu?
+    Would you like to end the program or return to main menu?
 
 Choice 3
     *hard-codes endpoint URL*
     What is your API Token?
     *sets token instance variable*
     Displays Webhook information, including IDs
-    Would you like to exit or return to main menu?
+    Would you like to end the program or return to main menu?
 
 Choice 4
     Display sample webhook data
-    Would you like to exit or return to main menu?
+    Would you like to end the program or return to main menu?
 
 Choice 5
     *hard-codes endpoint URL*
     What is your API Token?
     *sets token instance variable*
     Displays event types
-    Would you like to exit or return to main menu?
+    Would you like to end the program or return to main menu?
 
 Choice 6
     *hard-codes endpoint URL*
     What is your API Token?
     *sets token instance variable*
     Displays user information
-    Would you like to exit or return to main menu?
+    Would you like to end the program or return to main menu?

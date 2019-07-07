@@ -1,50 +1,67 @@
 #CLI Controller Class
+require 'net/http'
+
 class CalendlyWebhooks::CLI
 
     def call
-        puts "Welcome to Calendly's Developer Help Center! What would you like to do today?"
+        puts "\nWelcome to Calendly's Developer Help Center!"
+        sleep(1)
         choice
         input = ""
-        input = gets.strip
-        while input != "exit"
-        case input
-        when input == 1
+        input = gets.chomp
+    while input != "end"
+        if input == "1"
             create_webhook
+            puts "\n"
+            input = ""
             optional_exit
-            input = gets.strip
-        when input == 2
+        elsif input == "2"
             puts "Do you know the ID of the webhook that you would like to delete? (y/n)"
             id = gets.strip
             if id == "y"
                 delete_webhook
+                input = ""
                 optional_exit
-                input = gets.strip
             elsif id == "n"
                 puts "You will be unable to delete a webhook without the ID, please try finding the webhook first using option 3 from the main menu"
-                input = "return"
+                input = ""
+                sleep(2)
+                call
             end
-        when input == 3
+        elsif input == "3"
             find_webhooks
+            puts "\n"
+            input = ""
             optional_exit
-            input = gets.strip
-        when input == 4
+        elsif input == "4"
             sample_webhook_data
+            puts "\n"
+            input = ""
             optional_exit
-            input = gets.strip
-        when input == 5
+        elsif input == "5"
             see_event_types
+            puts "\n"
+            input = ""
             optional_exit
-            input = gets.strip
-        when input == 6
+        elsif input == "6"
             see_me
+            puts "\n"
+            input = ""
             optional_exit
-            input = gets.strip
-        when input == return
-            choice
-        else
-            puts "Please enter a valid number 1-6 or 'exit' to end the program"
+        elsif input == "return"
+            input = ""
+            call
+        elsif input != "1" && input != "2" && input != "3" && input != "4" && input != "5" && input != "6" && input != "return" && input != "end" && input != ""
+            puts "Please enter a valid number 1-6 or 'end' to end the program"
+            call
         end
-        if input == "exit"
+    end
+        if input == "end"
+            finish
+        end
+    end
+
+    def finish
             puts "For security reasons, this program will self destruct in 5..."
             sleep(1) 
             puts "4..."
@@ -56,25 +73,33 @@ class CalendlyWebhooks::CLI
             puts "1..." 
             sleep(1)
             puts "BOOM!"
-            
-        end 
-
     end
-end
 
     def choice
-        puts "1. Create a webhook"
-        puts "2. Delete a webhook"
-        puts "3. Find my webhooks"
-        puts "4. See sample webhook data"
-        puts "5. See my event types"
-        puts "6. See information about me"
-        puts "Type exit at any time to end the program"
+        puts "\nWhat would you like to do today?"
+        sleep(1)
+        puts "\n"
+        puts "  1. Create a webhook"
+        puts "  2. Delete a webhook"
+        puts "  3. Find my webhooks"
+        puts "  4. See sample webhook data"
+        puts "  5. See my event types"
+        puts "  6. See information about me"
+        puts "\n"
+        puts "  Type end at any time to end the program"
     end
 
     def optional_exit
-        puts "Would you like to exit or return to main menu?"
-        puts "Type 'exit' to exit the program or 'return' to return to the main menu"
+        puts "Would you like to end the program or return to main menu? (Type 'end' to end the program or 'return' to return to the main menu)"
+        decision = gets.strip
+        if decision == "end"
+            finish
+        elsif decision == "return"
+            call
+        else
+            puts "Please enter 'end' or 'return'"
+            optional_exit
+        end
     end
 
     def create_webhook
@@ -88,10 +113,13 @@ end
         destination = gets.strip
         hook.webhook_url = destination
         hook.endpoint_url = "https://calendly.com/api/v1/hooks"
-        hook.make_request
+        hook.make_post_request
         puts "We are are using the #{doc} documentation with a #{kind} request to accomplish this for you"
         sleep(1)
+        puts "\n"
         puts "Webhook created!"
+        sleep(1)
+        puts "\n"
         puts "Feel free to test out your new webhook by booking a test event with yourself using your Calendly scheduling link!"
     end
     
@@ -99,14 +127,14 @@ end
         puts "What is the Hook ID of the webhook that you would like to delete?"
         id = gets.strip
         hook = CalendlyWebhooks::Request.create_from_scraper("https://developer.calendly.com/docs/delete-webhook-subscription")
-        hook.endpoint_url = "https://calendly.com/api/v1/#{id}"
+        hook.endpoint_url = "https://calendly.com/api/v1/hooks/#{id}"
         doc = hook.documentation
         kind = hook.type
         puts "What is your API token?"
         key = gets.strip
         hook.token = key
         puts "We are are using the #{doc} documentation with a #{kind} request to accomplish this for you"
-        hook.make_request
+        hook.make_delete_request
         sleep(1)
         puts "Webhook deleted!"
     end
@@ -120,7 +148,7 @@ end
         key = gets.strip
         hook.token = key
         puts "We are are using the #{doc} documentation with a #{kind} request to accomplish this for you"
-        hook.make_request
+        hook.make_get_request
         sleep(1)
         puts "Here is the webhook data associated with that API token"
         puts hook.res.body
@@ -247,7 +275,7 @@ end
         key = gets.strip
         hook.token = key
         puts "We are are using the #{doc} documentation with a #{kind} request to accomplish this for you"
-        hook.make_request
+        hook.make_get_request
         sleep(1)
         puts "Here are the event types associated with that API token!"
         puts hook.res.body
@@ -262,9 +290,9 @@ end
         key = gets.strip
         hook.token = key
         puts "We are are using the #{doc} documentation with a #{kind} request to accomplish this for you"
-        hook.make_request
+        hook.make_get_request
         sleep(1)
         puts "Here is the information about the user associated with that API token!"
         puts hook.res.body
-    end
+end
 end
