@@ -147,11 +147,23 @@ class CalendlyWebhooks::CLI
         puts "What is your API token?"
         key = gets.strip
         hook.token = key
+        puts "\n"
         puts "We are are using the #{doc} documentation with a #{kind} request to accomplish this for you"
-        hook.make_get_request
+        puts "\n"
+        responses = []
+        response = hook.make_get_request.body.split("hooks").each do
+          |hook| responses << hook
+        end
+        responses.shift
+        data = responses.each {|response| response[0..2] = ""}
+        # response = hook.make_get_request.body.split(",{").each do
+        #   |hook| responses << hook
+        # end
+        # binding.pry
         sleep(1)
         puts "Here is the webhook data associated with that API token"
-        puts hook.res.body
+        puts "\n"
+        data.each.with_index(1) { |val,index| puts "#{index}. #{val} \n\n"}
     end
 
     def sample_webhook_data

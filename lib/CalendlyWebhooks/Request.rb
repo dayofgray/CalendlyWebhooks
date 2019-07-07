@@ -55,19 +55,6 @@ response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
 end
 end
 
-
-# uri = URI.parse("#{endpoint_url}")
-# request = Net::HTTP::Delete.new(uri)
-# request["X-Token"] = "#{token}"
-
-# req_options = {
-#   use_ssl: uri.scheme == "https",
-# }
-
-# response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
-#   http.request(request)
-# end
-
 def make_get_request
 
 uri = URI.parse("#{endpoint_url}")
