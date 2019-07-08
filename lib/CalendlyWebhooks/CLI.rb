@@ -15,6 +15,7 @@ class CalendlyWebhooks::CLI
             puts "\n"
             input = ""
             optional_exit
+            input = "end"
         elsif input == "2"
             puts "Do you know the ID of the webhook that you would like to delete? (y/n)"
             id = gets.strip
@@ -22,6 +23,7 @@ class CalendlyWebhooks::CLI
                 delete_webhook
                 input = ""
                 optional_exit
+                input = "end"
             elsif id == "n"
                 puts "You will be unable to delete a webhook without the ID, please try finding the webhook first using option 3 from the main menu"
                 input = ""
@@ -33,21 +35,40 @@ class CalendlyWebhooks::CLI
             puts "\n"
             input = ""
             optional_exit
+            input = "end"
         elsif input == "4"
             sample_webhook_data
             puts "\n"
             input = ""
             optional_exit
+            input = "end"
         elsif input == "5"
-            see_event_types
-            puts "\n"
+          full_event_types
+            # format_event_types(see_event_types)
+            # puts "\n"
+            # puts "Would you like to look at a specific event type in further detail? (y/n)"
+            # answer = gets.strip
+            # if answer == "y"
+            #   puts "What event type would you like more information on? (Please enter the name of the event type)"
+            #   event_type = gets.strip
+            #   if see_specific_event_type(event_type)
+            #     see_specific_event_type(name)
+            #   else
+            #     puts "There is no event type by that name"
+
+            # elsif answer == "n"
+            #   input = ""
+            #   optional_exit
+            # puts "\n"
             input = ""
             optional_exit
+            input = "end"
         elsif input == "6"
             see_me
             puts "\n"
             input = ""
             optional_exit
+            input = "end"
         elsif input == "return"
             input = ""
             call
@@ -92,11 +113,11 @@ class CalendlyWebhooks::CLI
     def optional_exit
         puts "Would you like to end the program or return to main menu? (Type 'end' to end the program or 'return' to return to the main menu)"
         decision = gets.strip
-        if decision == "end"
-            finish
-        elsif decision == "return"
+        # if decision == "end"
+        #     finish
+        if decision == "return"
             call
-        else
+        elsif decision != "end" && decision != "return"
             puts "Please enter 'end' or 'return'"
             optional_exit
         end
@@ -156,10 +177,6 @@ class CalendlyWebhooks::CLI
         end
         responses.shift
         data = responses.each {|response| response[0..2] = ""}
-        # response = hook.make_get_request.body.split(",{").each do
-        #   |hook| responses << hook
-        # end
-        # binding.pry
         sleep(1)
         puts "Here is the webhook data associated with that API token"
         puts "\n"
@@ -287,10 +304,52 @@ class CalendlyWebhooks::CLI
         key = gets.strip
         hook.token = key
         puts "We are are using the #{doc} documentation with a #{kind} request to accomplish this for you"
-        hook.make_get_request
+        responses = []
+        hook.make_get_request.body.split("event_types").each {|event_type| responses << event_type}
         sleep(1)
         puts "Here are the event types associated with that API token!"
-        puts hook.res.body
+        @responses = responses
+        responses
+    end
+    
+    def format_event_types(responses)
+      initial_events = []
+      initial_events = responses.collect {|response| x = response.gsub(/.*(?=name)/,'').gsub(/(?=","url).*/,'')
+      x[0..6] = ""
+      x
+      }
+      initial_events.shift
+      puts "\n"
+      puts initial_events
+    end
+
+    def see_specific_event_type(name)
+      final_list = @responses.select {|response| response.include?("#{name}")}
+      # puts final_list
+    end
+
+    def full_event_types
+      format_event_types(see_event_types)
+      # see_event_types
+          puts "\n"
+          puts "Would you like to look at a specific event type in further detail? (y/n)"
+          answer = gets.strip.downcase
+          if answer == "y"
+            puts "What event type would you like more information on? (Please enter the name of the event type)"
+              event_type = gets.strip
+              if see_specific_event_type(event_type).count >= 1
+               puts see_specific_event_type(event_type)
+              else
+                puts "There is no event type by that name. Let's pull your event types again!"
+                full_event_types
+              end
+            # elsif answer == "n"
+            #   input = ""
+            #   optional_exit
+            end
+            # puts "\n"
+            # input = ""
+            # optional_exit
     end
 
     def see_me
