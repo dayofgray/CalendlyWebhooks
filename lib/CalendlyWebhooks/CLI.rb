@@ -1,5 +1,4 @@
 #CLI Controller Class
-require 'net/http'
 
 class CalendlyWebhooks::CLI
 
@@ -9,19 +8,23 @@ class CalendlyWebhooks::CLI
         choice
         input = ""
         input = gets.chomp
-    while input != "end"
+    while input != "end" && input != "done"
         if input == "1"
+            puts "\n"
             create_webhook
             puts "\n"
             input = ""
             optional_exit
             input = "end"
         elsif input == "2"
+            puts "\n"
             puts "Do you know the ID of the webhook that you would like to delete? (y/n)"
             id = gets.strip
             if id == "y"
+                puts "\n"
                 delete_webhook
                 input = ""
+                puts "\n"
                 optional_exit
                 input = "end"
             elsif id == "n"
@@ -31,39 +34,27 @@ class CalendlyWebhooks::CLI
                 call
             end
         elsif input == "3"
+            puts "\n"
             find_webhooks
             puts "\n"
             input = ""
             optional_exit
             input = "end"
         elsif input == "4"
+            puts "\n"
             sample_webhook_data
             puts "\n"
             input = ""
             optional_exit
             input = "end"
         elsif input == "5"
+          puts "\n"
           full_event_types
-            # format_event_types(see_event_types)
-            # puts "\n"
-            # puts "Would you like to look at a specific event type in further detail? (y/n)"
-            # answer = gets.strip
-            # if answer == "y"
-            #   puts "What event type would you like more information on? (Please enter the name of the event type)"
-            #   event_type = gets.strip
-            #   if see_specific_event_type(event_type)
-            #     see_specific_event_type(name)
-            #   else
-            #     puts "There is no event type by that name"
-
-            # elsif answer == "n"
-            #   input = ""
-            #   optional_exit
-            # puts "\n"
             input = ""
             optional_exit
             input = "end"
         elsif input == "6"
+            puts "\n"
             see_me
             puts "\n"
             input = ""
@@ -72,17 +63,20 @@ class CalendlyWebhooks::CLI
         elsif input == "return"
             input = ""
             call
+        elsif input = "end" || input = "done"
+          finish
         elsif input != "1" && input != "2" && input != "3" && input != "4" && input != "5" && input != "6" && input != "return" && input != "end" && input != ""
-            puts "Please enter a valid number 1-6 or 'end' to end the program"
+          puts "\n"  
+          puts "Please enter a valid number 1-6 or 'end' to end the program"
             call
         end
     end
         if input == "end"
             finish
         end
-    end
+        end
 
-    def finish
+    def finish #end of program
             puts "For security reasons, this program will self destruct in 5..."
             sleep(1) 
             puts "4..."
@@ -110,11 +104,12 @@ class CalendlyWebhooks::CLI
         puts "  Type end at any time to end the program"
     end
 
-    def optional_exit
+    def optional_exit #allows a user to exit the program
         puts "Would you like to end the program or return to main menu? (Type 'end' to end the program or 'return' to return to the main menu)"
         decision = gets.strip
         # if decision == "end"
-        #     finish
+        #     input = "end"
+        #     call
         if decision == "return"
             call
         elsif decision != "end" && decision != "return"
@@ -123,7 +118,7 @@ class CalendlyWebhooks::CLI
         end
     end
 
-    def create_webhook
+    def create_webhook #creates a new webhook
         hook = CalendlyWebhooks::Request.create_from_scraper("https://developer.calendly.com/docs/webhook-subscriptions")
         doc = hook.documentation
         kind = hook.type
@@ -144,7 +139,7 @@ class CalendlyWebhooks::CLI
         puts "Feel free to test out your new webhook by booking a test event with yourself using your Calendly scheduling link!"
     end
     
-    def delete_webhook
+    def delete_webhook #deletes an identified webhook
         puts "What is the Hook ID of the webhook that you would like to delete?"
         id = gets.strip
         hook = CalendlyWebhooks::Request.create_from_scraper("https://developer.calendly.com/docs/delete-webhook-subscription")
@@ -154,13 +149,15 @@ class CalendlyWebhooks::CLI
         puts "What is your API token?"
         key = gets.strip
         hook.token = key
+        puts "\n"
         puts "We are are using the #{doc} documentation with a #{kind} request to accomplish this for you"
         hook.make_delete_request
         sleep(1)
+        puts "\n"
         puts "Webhook deleted!"
     end
 
-    def find_webhooks
+    def find_webhooks #fetches a list of the webhooks tied to a user's account
         hook = CalendlyWebhooks::Request.create_from_scraper("https://developer.calendly.com/docs/get-list-of-webhook-subscriptions")
         hook.endpoint_url = "https://calendly.com/api/v1/hooks"
         doc = hook.documentation
@@ -183,7 +180,7 @@ class CalendlyWebhooks::CLI
         data.each.with_index(1) { |val,index| puts "#{index}. #{val} \n\n"}
     end
 
-    def sample_webhook_data
+    def sample_webhook_data #displays sample webhook data
         puts "  \n
   'event':'invitee.created', \n
   'time':'2018-03-14T19:16:01Z', \n
@@ -295,7 +292,7 @@ class CalendlyWebhooks::CLI
 }"
     end
     
-    def see_event_types
+    def see_event_types #fetches event types
         hook = CalendlyWebhooks::Request.create_from_scraper("https://developer.calendly.com/docs/user-event-types")
         hook.endpoint_url = "https://calendly.com/api/v1/users/me/event_types"
         doc = hook.documentation
@@ -303,16 +300,18 @@ class CalendlyWebhooks::CLI
         puts "What is your API token?"
         key = gets.strip
         hook.token = key
+        puts "\n"
         puts "We are are using the #{doc} documentation with a #{kind} request to accomplish this for you"
         responses = []
         hook.make_get_request.body.split("event_types").each {|event_type| responses << event_type}
         sleep(1)
+        puts "\n"
         puts "Here are the event types associated with that API token!"
         @responses = responses
         responses
     end
     
-    def format_event_types(responses)
+    def format_event_types(responses) #formats event type strings
       initial_events = []
       initial_events = responses.collect {|response| x = response.gsub(/.*(?=name)/,'').gsub(/(?=","url).*/,'')
       x[0..6] = ""
@@ -323,36 +322,32 @@ class CalendlyWebhooks::CLI
       puts initial_events
     end
 
-    def see_specific_event_type(name)
+    def see_specific_event_type(name) #finder that enables user to find more information about a specific event type by name
       final_list = @responses.select {|response| response.include?("#{name}")}
       # puts final_list
     end
 
-    def full_event_types
+    def full_event_types #allows users to see a list of event types or further details if they would like
       format_event_types(see_event_types)
       # see_event_types
           puts "\n"
           puts "Would you like to look at a specific event type in further detail? (y/n)"
           answer = gets.strip.downcase
           if answer == "y"
+            puts "\n"
             puts "What event type would you like more information on? (Please enter the name of the event type)"
               event_type = gets.strip
               if see_specific_event_type(event_type).count >= 1
                puts see_specific_event_type(event_type)
               else
+                puts "\n"
                 puts "There is no event type by that name. Let's pull your event types again!"
                 full_event_types
               end
-            # elsif answer == "n"
-            #   input = ""
-            #   optional_exit
             end
-            # puts "\n"
-            # input = ""
-            # optional_exit
     end
 
-    def see_me
+    def see_me #gets user information
         hook = CalendlyWebhooks::Request.create_from_scraper("https://developer.calendly.com/docs/about-me")
         hook.endpoint_url = "https://calendly.com/api/v1/users/me"
         doc = hook.documentation
@@ -360,10 +355,14 @@ class CalendlyWebhooks::CLI
         puts "What is your API token?"
         key = gets.strip
         hook.token = key
+        puts "\n"
         puts "We are are using the #{doc} documentation with a #{kind} request to accomplish this for you"
-        hook.make_get_request
+        responses = []
+        response = hook.make_get_request.body
         sleep(1)
+        puts "\n"
         puts "Here is the information about the user associated with that API token!"
-        puts hook.res.body
+        puts "\n"
+        puts response
 end
 end
