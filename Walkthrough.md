@@ -1,16 +1,3 @@
-What website will you be scraping?
-    *https://developer.calendly.com/docs*
-What will you need to do with the data you return from scraping?
-    *API is being updated all of the time so I want to take input from the user and and then use that as a parameter for which page on that site I'm going to scrape for the URL*
-What classes will you be using?
-    *CLI, Scraper, and Request*
-What will be the flow of displaying data for your application. ex How will your CLI portion work.
-    *see below*
-How will you display data one level deep to the user?
-*showing sample webhook data* unsure on this one
-What will need to be in your README file?
-*installation instructions and how to test these webhooks*
-
 Welcome to Calendly's Developer Help Center! What would you like to do today?
 
 *NOTE For each of these options, you will need your API token, which can be found at the top of your Integrations page
