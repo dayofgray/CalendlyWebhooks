@@ -1,8 +1,6 @@
 # CalendlyWebhooks
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/CalendlyWebhooks`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+This gem is designed to allow Calendly users to easily create, delete, and manage their webhooks without using curl commands. In addition, Calendly users can see their existing event types and information about themselves as users!
 
 ## Installation
 
@@ -19,10 +17,6 @@ And then execute:
 Or install it yourself as:
 
     $ gem install CalendlyWebhooks
-
-## Usage
-
-TODO: Write usage instructions here
 
 ## Development
 
