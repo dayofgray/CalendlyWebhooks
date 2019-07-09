@@ -9,6 +9,7 @@ class CalendlyWebhooks::CLI
         input = ""
         input = gets.chomp
     while input != "end" && input != "done"
+      break if input == ""
         if input == "1"
             puts "\n"
             create_webhook
@@ -63,11 +64,12 @@ class CalendlyWebhooks::CLI
         elsif input == "return"
             input = ""
             call
-        elsif input = "end" || input = "done"
+        elsif input == "end" || input == "done"
           finish
         elsif input != "1" && input != "2" && input != "3" && input != "4" && input != "5" && input != "6" && input != "return" && input != "end" && input != ""
           puts "\n"  
           puts "Please enter a valid number 1-6 or 'end' to end the program"
+            input = ""
             call
         end
     end
