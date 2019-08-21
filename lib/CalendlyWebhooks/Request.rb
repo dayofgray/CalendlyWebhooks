@@ -22,22 +22,22 @@ def self.create_from_scraper(url)
 end
 
 def make_post_request
+  uri = URI.parse("#{endpoint_url}")
+  request = Net::HTTP::Post.new(uri)
+  request["X-Token"] = "#{token}"
+  request.set_form_data(
+    "events[]" => "invitee.created",
+    "url" => "#{webhook_url}",
+    )
 
-uri = URI.parse("#{endpoint_url}")
-request = Net::HTTP::Post.new(uri)
-request["X-Token"] = "#{token}"
-request.set_form_data(
-  "events[]" => "invitee.created",
-  "url" => "#{webhook_url}",
-  )
+  req_options = {
+    use_ssl: uri.scheme == "https",
+  }
+  
+  response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+    http.request(request)
+  end
 
-req_options = {
-  use_ssl: uri.scheme == "https",
-}
-
-response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
-  http.request(request)
-end
 end
 
 def make_delete_request
